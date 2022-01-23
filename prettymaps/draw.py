@@ -147,6 +147,7 @@ def plot(
     scale_x=None,
     scale_y=None,
     rotation=None,
+    buffer_dist=None,
 ):
     """
     
@@ -223,7 +224,7 @@ def plot(
             base_kwargs = {
                 "perimeter": query
                 if query_mode == "polygon"
-                else get_perimeter(query, by_osmid=query_mode == "osmid")
+                else get_perimeter(query, by_osmid=query_mode == "osmid", buffer_dist=buffer_dist)
             }
 
         # Fetch layers
