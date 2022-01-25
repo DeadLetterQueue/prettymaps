@@ -150,7 +150,7 @@ def get_coast(
                 [],
             )
         )
-
+    print(geometries)
     return geometries
 
 
