@@ -236,7 +236,8 @@ def plot(
         }
         print('A')
         print(layers)
-
+        for layer in layers:
+            print(layer)
         # Apply transformation to layers (translate & scale)
         layers = transform(layers, x, y, scale_x, scale_y, rotation)
 
