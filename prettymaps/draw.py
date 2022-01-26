@@ -234,6 +234,8 @@ def plot(
             )
             for layer, kwargs in layers.items()
         }
+        print('A')
+        print(layers)
 
         # Apply transformation to layers (translate & scale)
         layers = transform(layers, x, y, scale_x, scale_y, rotation)
