@@ -207,7 +207,9 @@ def get_geometries(
 
     # Project GDF
     if len(geometries) > 0:
+        print(geometries)
         geometries = ox.project_gdf(geometries)
+        print(geometries)
 
     # Intersect with perimeter
     geometries = geometries.intersection(perimeter)
@@ -378,7 +380,6 @@ def get_layer(layer: String, **kwargs) -> Union[Polygon, MultiPolygon]:
         else:
             raise Exception("Either 'perimeter' or 'point' & 'radius' must be provided")
     # Fetch streets or railway
-    print(**kwargs)
     if layer in ["streets", "railway", "waterway"]:
         return get_streets(**kwargs, layer=layer)
     # Fetch Coastline
