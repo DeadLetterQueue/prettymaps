@@ -191,7 +191,9 @@ def get_geometries(
             else unary_union(perimeter.geometry),
             tags={tags: True} if type(tags) == str else tags,
         )
+        print(geometries)
         perimeter = unary_union(ox.project_gdf(perimeter).geometry)
+        print(perimeter)
     # Boundary defined by circle with radius 'radius' around point
     elif (point is not None) and (radius is not None):
         geometries = ox.geometries_from_point(
@@ -376,6 +378,7 @@ def get_layer(layer: String, **kwargs) -> Union[Polygon, MultiPolygon]:
         else:
             raise Exception("Either 'perimeter' or 'point' & 'radius' must be provided")
     # Fetch streets or railway
+    print(**kwargs)
     if layer in ["streets", "railway", "waterway"]:
         return get_streets(**kwargs, layer=layer)
     # Fetch Coastline
