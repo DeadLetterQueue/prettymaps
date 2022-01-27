@@ -150,6 +150,7 @@ def get_coast(
                 [],
             )
         )
+    print('S')
     print(geometries)
     return geometries
 
@@ -191,8 +192,10 @@ def get_geometries(
             else unary_union(perimeter.geometry),
             tags={tags: True} if type(tags) == str else tags,
         )
+        print('Y')
         print(geometries)
         perimeter = unary_union(ox.project_gdf(perimeter).geometry)
+        print('X')
         print(perimeter)
     # Boundary defined by circle with radius 'radius' around point
     elif (point is not None) and (radius is not None):
@@ -207,8 +210,10 @@ def get_geometries(
 
     # Project GDF
     if len(geometries) > 0:
+        print('D')
         print(geometries)
         geometries = ox.project_gdf(geometries)
+        print('K')
         print(geometries)
 
     # Intersect with perimeter
