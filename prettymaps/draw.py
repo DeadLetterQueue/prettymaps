@@ -32,6 +32,7 @@ from tabulate import tabulate
 from .fetch import get_perimeter, get_layer
 
 
+
 # Plot a single shape
 def plot_shape(shape, ax, vsketch=None, **kwargs):
     """
@@ -226,7 +227,8 @@ def plot(
                 if query_mode == "polygon"
                 else get_perimeter(query, by_osmid=query_mode == "osmid", buffer_dist=buffer_dist)
             }
-
+        print('R')
+        print(base_kwargs)
         # Fetch layers
         layers = {
             layer: get_layer(
