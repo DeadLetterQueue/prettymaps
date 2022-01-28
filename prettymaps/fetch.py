@@ -49,6 +49,12 @@ def get_boundary(
     """
 
     if circle:
+        print('crs2')
+        print(ox.project_gdf(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs)))
+        print(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs))
+        print(ox.project_gdf(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs)).crs)
+       
+        
         return (
             ox.project_gdf(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs))
             .geometry[0]
