@@ -165,8 +165,7 @@ def get_gpx(
     circle: Boolean = True,
     dilate: float = 0,
     point_size: float = 1,
-    line_width: float = 1,
-    gpx_file: string = None
+    line_width: float = 1
 ) -> Union[Polygon, MultiPolygon]:
     """Get geometries
 
@@ -186,7 +185,7 @@ def get_gpx(
 
     # Boundary defined by polygon (perimeter)
     if perimeter is not None:
-        geometries = gpd.read_file(gpx_file, layer='tracks')
+        geometries = gpd.read_file(tags['gpx_file'], layer='tracks')
         print('Y')
         print(geometries)
         for t in geometries:
@@ -198,7 +197,7 @@ def get_gpx(
             print(t)
     # Boundary defined by circle with radius 'radius' around point
     elif (point is not None) and (radius is not None):
-        geometries = gpd.read_file(gpx_file, layer='tracks')
+        geometries = gpd.read_file(tags['gpx_file'], layer='tracks')
         print('E')
         print(geometries)
         perimeter = get_boundary(
