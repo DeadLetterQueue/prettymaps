@@ -154,6 +154,101 @@ def get_coast(
     print(geometries)
     return geometries
 
+def get_gpx(
+    perimeter: Optional[GeoDataFrame] = None,
+    point: Optional[Tuple] = None,
+    radius: Optional[float] = None,
+    tags: Dict = {},
+    perimeter_tolerance: float = 0,
+    union: Boolean = True,
+    buffer: float = 0,
+    circle: Boolean = True,
+    dilate: float = 0,
+    point_size: float = 1,
+    line_width: float = 1,
+    gpx_file: string = None
+) -> Union[Polygon, MultiPolygon]:
+    """Get geometries
+
+    Args:
+        perimeter (Optional[GeoDataFrame], optional): Perimeter from within geometries will be fetched. Defaults to None.
+        point (Optional[Tuple], optional): GPS coordinates. Defaults to None.
+        radius (Optional[Number], optional): Radius in meters. Defaults to None.
+        tags (Dict, optional): OpenStreetMap tags for the geometries to be fetched. Defaults to {}.
+        perimeter_tolerance (Number, optional): Tolerance in meters for fetching geometries that fall outside the perimeter. Defaults to 0.
+        union (Boolean, optional): Whether to compute the union of all geometries. Defaults to True.
+        circle (Boolean, optional): Whether to fetch geometries in a circular (True) or square (False) shape. Defaults to True.
+        dilate (Number, optional): Dilate the boundary by this much in meters. Defaults to 0.
+
+    Returns:
+        [type]: [description]
+    """
+
+    # Boundary defined by polygon (perimeter)
+    if perimeter is not None:
+        geometries = gpd.read_file(gpx_file, layer='tracks')
+        print('Y')
+        print(geometries)
+        for t in geometries:
+            print(t)
+        perimeter = unary_union(ox.project_gdf(perimeter).geometry)
+        print('X')
+        print(perimeter)
+        for t in perimeter:
+            print(t)
+    # Boundary defined by circle with radius 'radius' around point
+    elif (point is not None) and (radius is not None):
+        geometries = gpd.read_file(gpx_file, layer='tracks')
+        print('E')
+        print(geometries)
+        perimeter = get_boundary(
+            point, radius, geometries.crs, circle=circle, dilate=dilate
+        )
+        print('Q')
+        print(perimeter)
+
+    # Project GDF
+    if len(geometries) > 0:
+        print('D')
+        print(geometries)
+        geometries = ox.project_gdf(geometries)
+        print('K')
+        print(geometries)
+        for t in geometries:
+            print(t)
+
+    # Intersect with perimeter
+    geometries = geometries.intersection(perimeter)
+
+    for t in geometries:
+            print(t)
+            
+    # Get points, lines, polys & multipolys
+    points, lines, polys, multipolys = map(
+        lambda t: [x for x in geometries if isinstance(x, t)],
+        [Point, LineString, Polygon, MultiPolygon]
+    )
+    print('DF')
+    for t in multipolys:
+            print(t)
+            
+    # Convert points, lines & polygons into multipolygons
+    points = [x.buffer(point_size) for x in points]
+    lines = [x.buffer(line_width) for x in lines]
+    # Concatenate multipolys
+    multipolys = reduce(lambda x,y: x+y, [list(x) for x in multipolys]) if len(multipolys) > 0 else []
+    print('DeF')
+    for t in multipolys:
+            print(t)
+    # Group everything
+    geometries = MultiPolygon(points + lines + polys + multipolys)
+    print('DeddF')
+    for t in geometries:
+            print(t)
+    # Compute union if specified
+    if union: geometries = unary_union(geometries);
+
+    return geometries
 
 def get_geometries(
     perimeter: Optional[GeoDataFrame] = None,
