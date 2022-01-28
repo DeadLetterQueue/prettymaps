@@ -204,9 +204,13 @@ def get_geometries(
             dist=radius + dilate + buffer,
             tags={tags: True} if type(tags) == str else tags,
         )
+        print('E')
+        print(geometries)
         perimeter = get_boundary(
             point, radius, geometries.crs, circle=circle, dilate=dilate
         )
+        print(Q')
+        print(perimeter)
 
     # Project GDF
     if len(geometries) > 0:
