@@ -51,9 +51,11 @@ def get_boundary(
     if circle:
         print('crs2')
         print(ox.project_gdf(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs)))
+        print('crs3')
         print(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs))
+        print('crs4')
         print(ox.project_gdf(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs)).crs)
-       
+        print('crs5')
         
         return (
             ox.project_gdf(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs))
