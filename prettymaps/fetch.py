@@ -62,6 +62,8 @@ def get_boundary(
         )
         print('crs')
         print(ox.project_gdf(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs)).crs)
+        print(GeoDataFrame(geometry=[Point(point[::-1])])
+        print(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs)))
         r = radius
         return Polygon(
             [(x - r, y - r), (x + r, y - r), (x + r, y + r), (x - r, y + r)]
