@@ -507,6 +507,9 @@ def get_layer(layer: String, **kwargs) -> Union[Polygon, MultiPolygon]:
     # Fetch Coastline
     elif layer == "coastline":
         return get_coast(**kwargs)
+    # Fetch Coastline
+    elif layer == "gpx":
+        return get_gpx(**kwargs)
     # Fetch geometries
     else:
         return get_geometries(**kwargs)
