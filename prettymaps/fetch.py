@@ -509,7 +509,8 @@ def get_layer(layer: String, **kwargs) -> Union[Polygon, MultiPolygon]:
         return get_coast(**kwargs)
     # Fetch Coastline
     elif layer == "gpx":
-        return get_gpx(**kwargs)
+        crs = "EPSG:4326"
+        return ox.project_gdf(get_gpx(**kwargs),crs)
     # Fetch geometries
     else:
         return get_geometries(**kwargs)
