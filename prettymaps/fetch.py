@@ -194,9 +194,13 @@ def get_geometries(
         )
         print('Y')
         print(geometries)
+        for t in geometries:
+            print(t)
         perimeter = unary_union(ox.project_gdf(perimeter).geometry)
         print('X')
         print(perimeter)
+        for t in perimeter:
+            print(t)
     # Boundary defined by circle with radius 'radius' around point
     elif (point is not None) and (radius is not None):
         geometries = ox.geometries_from_point(
@@ -219,22 +223,37 @@ def get_geometries(
         geometries = ox.project_gdf(geometries)
         print('K')
         print(geometries)
+        for t in geometries:
+            print(t)
 
     # Intersect with perimeter
     geometries = geometries.intersection(perimeter)
 
+    for t in geometries:
+            print(t)
+            
     # Get points, lines, polys & multipolys
     points, lines, polys, multipolys = map(
         lambda t: [x for x in geometries if isinstance(x, t)],
         [Point, LineString, Polygon, MultiPolygon]
     )
+    print('DF')
+    for t in multipolys:
+            print(t)
+            
     # Convert points, lines & polygons into multipolygons
     points = [x.buffer(point_size) for x in points]
     lines = [x.buffer(line_width) for x in lines]
     # Concatenate multipolys
     multipolys = reduce(lambda x,y: x+y, [list(x) for x in multipolys]) if len(multipolys) > 0 else []
+    print('DeF')
+    for t in multipolys:
+            print(t)
     # Group everything
     geometries = MultiPolygon(points + lines + polys + multipolys)
+    print('DeddF')
+    for t in geometries:
+            print(t)
     # Compute union if specified
     if union: geometries = unary_union(geometries);
 
