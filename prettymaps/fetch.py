@@ -209,7 +209,7 @@ def get_geometries(
         perimeter = get_boundary(
             point, radius, geometries.crs, circle=circle, dilate=dilate
         )
-        print(Q')
+        print('Q')
         print(perimeter)
 
     # Project GDF
