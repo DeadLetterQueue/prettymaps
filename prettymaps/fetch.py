@@ -523,7 +523,7 @@ def get_layer(layer: String, **kwargs) -> Union[Polygon, MultiPolygon]:
     elif layer == "gpx":
         crs = "EPSG:4326"
         gdf = get_gpx(**kwargs)
-        return ox.project_gdf(gdf,**kwargs)
+        return ox.project_gdf(gdf)
     # Fetch geometries
     else:
         return get_geometries(**kwargs)
