@@ -258,7 +258,8 @@ def get_gpx(
             print(t)
     print('DF4')
     for t in multilinestring:
-            print(t)
+        for line in t:
+            print(line)
             
     # Convert points, lines & polygons into multipolygons
     points = [x.buffer(point_size) for x in points]
