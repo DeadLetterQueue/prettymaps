@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import re
 from collections.abc import Iterable
 
+import copy
 import osmnx as ox
 import pandas as pd
 from geopandas import GeoDataFrame
@@ -203,7 +204,7 @@ def plot(
     # Interpret query
     query_mode = parse_query(query)
     
-    orginal_layers = {key: value[:] for key, value in layers.items()}
+    orginal_layers = copy.deepcopy(layers)
     
     for layer in layers:
         if layer == 'heat_map':
