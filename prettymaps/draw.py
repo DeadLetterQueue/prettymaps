@@ -126,6 +126,7 @@ def plot(
     query,
     # Whether to use a backup for the layers
     backup=None,
+    heat_map = False,
     # Custom postprocessing function on layers
     postprocessing=None,
     # Radius (in case of circular plot)
@@ -201,8 +202,6 @@ def plot(
 
     # Interpret query
     query_mode = parse_query(query)
-    
-    heat_map = False
     
     for layer in layers:
         if layer == 'heat_map':
