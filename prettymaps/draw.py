@@ -203,6 +203,8 @@ def plot(
     # Interpret query
     query_mode = parse_query(query)
     
+    orginal_layers = {key: value[:] for key, value in layers.items()}
+    
     for layer in layers:
         if layer == 'heat_map':
             heat_map = True
@@ -282,17 +284,18 @@ def plot(
         y = []
         found = False
         for layer in layers:
-            if 'heat_map' in layers[layer] and layers[layer]['heat_map'] == true:
-                found = True
-                if isinstance(layers[layer],Polygon):
-                    for i in layers[layer].exterior.coords:
-                      x.append(i[0])
-                      y.append(i[1])
-                if isinstance(layers[layer],MultiPolygon):
-                    for poly in layers[layer]:
-                        for i in poly.exterior.coords:
+            if 'tags' in orginal_layers[layer]:
+                if 'heat_map' in orginal_layers[layer]['tags'] and orginal_layers[layer]['tags']['heat_map'] == True:
+                    found = True
+                    if isinstance(layers[layer],Polygon):
+                        for i in layers[layer].exterior.coords:
                           x.append(i[0])
                           y.append(i[1])
+                    if isinstance(layers[layer],MultiPolygon):
+                        for poly in layers[layer]:
+                            for i in poly.exterior.coords:
+                              x.append(i[0])
+                              y.append(i[1])
         if found:
             kwargs = kwargs = drawing_kwargs['heat_map'] if 'heat_map' in drawing_kwargs else {}
             res = sn.kdeplot(x,y,**{k: v for k, v in kwargs.items()})
