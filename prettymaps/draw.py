@@ -280,18 +280,22 @@ def plot(
         import pandas
         x = []
         y = []
+        found = False
         for layer in layers:
-            if isinstance(layers[layer],Polygon):
-                for i in layers[layer].exterior.coords:
-                  x.append(i[0])
-                  y.append(i[1])
-            if isinstance(layers[layer],MultiPolygon):
-                for poly in layers[layer]:
-                    for i in poly.exterior.coords:
+            if 'heat_map' in layers[layer] and layers[layer]['heat_map'] == true:
+                found = True
+                if isinstance(layers[layer],Polygon):
+                    for i in layers[layer].exterior.coords:
                       x.append(i[0])
                       y.append(i[1])
-        kwargs = kwargs = drawing_kwargs['heat_map'] if 'heat_map' in drawing_kwargs else {}
-        res = sn.kdeplot(x,y,**{k: v for k, v in kwargs.items()})
+                if isinstance(layers[layer],MultiPolygon):
+                    for poly in layers[layer]:
+                        for i in poly.exterior.coords:
+                          x.append(i[0])
+                          y.append(i[1])
+        if found:
+            kwargs = kwargs = drawing_kwargs['heat_map'] if 'heat_map' in drawing_kwargs else {}
+            res = sn.kdeplot(x,y,**{k: v for k, v in kwargs.items()})
 
     # Adjust bounds
     xmin, ymin, xmax, ymax = layers["perimeter"].buffer(max_dilation).bounds
