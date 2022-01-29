@@ -290,8 +290,8 @@ def plot(
                     for i in poly.exterior.coords:
                       x.append(i[0])
                       y.append(i[1])
-
-        res = sn.kdeplot(x,y,color='blue',shade=True)
+        kwargs = kwargs = drawing_kwargs['heat_map'] if 'heat_map' in drawing_kwargs else {}
+        res = sn.kdeplot(x,y,**{k: v for k, v in kwargs.items()})
 
     # Adjust bounds
     xmin, ymin, xmax, ymax = layers["perimeter"].buffer(max_dilation).bounds
