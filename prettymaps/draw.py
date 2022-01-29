@@ -281,10 +281,15 @@ def plot(
         x = []
         y = []
         for layer in layers:
-            if isinstance(layer,Polygon);
+            if isinstance(layers[layer],Polygon):
                 for i in layers[layer].exterior.coords:
                   x.append(i[0])
                   y.append(i[1])
+            if isinstance(layers[layer],MultiPolygon):
+                for poly in layers[layer]:
+                    for i in poly.exterior.coords:
+                      x.append(i[0])
+                      y.append(i[1])
 
         res = sn.kdeplot(x,y,color='blue',shade=True)
 
