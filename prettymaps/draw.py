@@ -301,7 +301,7 @@ def plot(
             )
         else:
             # Draw shape normally
-            plot_shapes(shapes, ax, vsketch=vsketch, **kwargs)
+            plot_shapes(shapes, ax, vsketch=vsketch, path_effects=path_effects, **kwargs)
 
     if ((isinstance(osm_credit, dict)) or (osm_credit is True)) and (vsketch is None):
         x, y = figsize
