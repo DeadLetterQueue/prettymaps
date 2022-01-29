@@ -243,6 +243,7 @@ def plot(
         for layer in layers:
             if layer == 'heat_map':
                 heat_map = True
+                del layers['heat_map']
             print(layers[layer])
         layers = [x for x in layers if x != 'heat_map']
             
