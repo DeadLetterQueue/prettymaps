@@ -198,6 +198,7 @@ def get_gpx(
     # Boundary defined by polygon (perimeter)
     if perimeter is not None:
         geometries = gpd.read_file(tags['gpx_file'], layer='tracks')
+        geometries.set_crs(crs="EPSG:4326")
         print('Y')
         print(geometries)
         for t in geometries:
