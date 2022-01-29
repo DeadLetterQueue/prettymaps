@@ -24,7 +24,7 @@ import pandas as pd
 from geopandas import GeoDataFrame
 import numpy as np
 from numpy.random import choice
-from shapely.geometry import box, Polygon, MultiLineString, GeometryCollection
+from shapely.geometry import box, Polygon, MultiLineString, GeometryCollection, MultiPolygon
 from shapely.affinity import translate, scale, rotate
 from descartes import PolygonPatch
 from tabulate import tabulate
