@@ -244,7 +244,7 @@ def plot(
             if layer == 'heat_map':
                 heat_map = True
             print(layers[layer])
-        layers = [x for x in layers if != 'heat_map']
+        layers = [x for x in layers if x != 'heat_map']
             
         # Apply transformation to layers (translate & scale)
         layers = transform(layers, x, y, scale_x, scale_y, rotation)
