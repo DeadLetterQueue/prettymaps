@@ -272,6 +272,20 @@ def plot(
             ax.add_patch(PolygonPatch(geom, **drawing_kwargs["background"]))
         else:
             vsketch.geometry(geom)
+            
+    if heat_map:
+        import seaborn as sn
+        import matplotlib.pyplot as plt
+        import numpy as np
+        import pandas
+        x = []
+        y = []
+        for layer in layers:
+            for i in layer.exterior.coords:
+              x.append(i[0])
+              y.append(i[1])
+
+        res = sn.kdeplot(x,y,color='blue',shade=True)
 
     # Adjust bounds
     xmin, ymin, xmax, ymax = layers["perimeter"].buffer(max_dilation).bounds
