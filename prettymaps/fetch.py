@@ -260,6 +260,7 @@ def get_gpx(
     for t in multilinestring:
         for line in t:
             print(line)
+            lines.append(line)
             
     # Convert points, lines & polygons into multipolygons
     points = [x.buffer(point_size) for x in points]
@@ -270,7 +271,7 @@ def get_gpx(
     for t in multipolys:
             print(t)
     # Group everything
-    geometries = MultiPolygon(points + lines + polys + multipolys + multilinestring)
+    geometries = MultiPolygon(points + lines + polys + multipolys)
     print('DeddF')
     for t in geometries:
             print(t)
