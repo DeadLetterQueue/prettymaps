@@ -34,7 +34,7 @@ from .fetch import get_perimeter, get_layer
 
 
 # Plot a single shape
-def plot_shape(shape, ax, vsketch=None, **kwargs):
+def plot_shape(shape, ax, vsketch=None, path_effects=None, **kwargs):
     """
     Plot shapely object
     """
@@ -45,7 +45,7 @@ def plot_shape(shape, ax, vsketch=None, **kwargs):
         if not shape.is_empty:
 
             if vsketch is None:
-                ax.add_patch(PolygonPatch(shape, **kwargs))
+                ax.add_patch(PolygonPatch(shape, path_effects=path_effects, **kwargs))
             else:
                 if ("draw" not in kwargs) or kwargs["draw"]:
 
@@ -68,7 +68,7 @@ def plot_shape(shape, ax, vsketch=None, **kwargs):
 
 
 # Plot a collection of shapes
-def plot_shapes(shapes, ax, vsketch=None, palette=None, **kwargs):
+def plot_shapes(shapes, ax, vsketch=None, palette=None, path_effects=None, **kwargs):
     """
     Plot collection of shapely objects (optionally, use a color palette)
     """
@@ -77,9 +77,9 @@ def plot_shapes(shapes, ax, vsketch=None, palette=None, **kwargs):
 
     for shape in shapes:
         if palette is None:
-            plot_shape(shape, ax, vsketch=vsketch, **kwargs)
+            plot_shape(shape, ax, vsketch=vsketch, path_effects=path_effects, **kwargs)
         else:
-            plot_shape(shape, ax, vsketch=vsketch, fc=choice(palette), **kwargs)
+            plot_shape(shape, ax, vsketch=vsketch, fc=choice(palette), path_effects=path_effects, **kwargs)
 
 
 # Parse query (by coordinates, OSMId or name)
