@@ -240,12 +240,24 @@ def get_gpx(
         print(t)
             
     # Get points, lines, polys & multipolys
-    points, lines, polys, multipolys = map(
+    points, lines, polys, multipolys, multilinestring = map(
         lambda t: [x for x in geometries if isinstance(x, t)],
         [Point, LineString, Polygon, MultiPolygon,MultiLineString]
     )
     print('DF')
     for t in multipolys:
+            print(t)
+    print('DF2')
+    for t in points:
+            print(t)
+    print('DF3')
+    for t in lines:
+            print(t)     
+    print('DF4')
+    for t in polys:
+            print(t)
+    print('DF4')
+    for t in multilinestring:
             print(t)
             
     # Convert points, lines & polygons into multipolygons
@@ -257,7 +269,7 @@ def get_gpx(
     for t in multipolys:
             print(t)
     # Group everything
-    geometries = MultiPolygon(points + lines + polys + multipolys)
+    geometries = MultiPolygon(points + lines + polys + multipolys + multilinestring)
     print('DeddF')
     for t in geometries:
             print(t)
