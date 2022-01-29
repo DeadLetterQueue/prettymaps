@@ -539,7 +539,7 @@ def get_layer(layer: String, **kwargs) -> Union[Polygon, MultiPolygon]:
     elif layer == "coastline":
         return get_coast(**kwargs)
     # Fetch Coastline
-    elif 'gpx_file' in tags:
+    elif 'gpx_file' in kwargs["tags"]:
         gdf = get_gpx(**kwargs)
         return gdf
     # Fetch geometries
