@@ -203,6 +203,11 @@ def plot(
     query_mode = parse_query(query)
     
     heat_map = False
+    
+    for layer in layers:
+        if layer == 'heat_map':
+            heat_map = True
+            del layers['heat_map']
 
     # Save maximum dilation for later use
     dilations = [kwargs["dilate"] for kwargs in layers.values() if "dilate" in kwargs]
@@ -240,11 +245,7 @@ def plot(
         }
         print('A')
         print(layers)
-        for layer in layers:
-            if layer == 'heat_map':
-                heat_map = True
-                del layers['heat_map']
-            print(layers[layer])
+        
             
         # Apply transformation to layers (translate & scale)
         layers = transform(layers, x, y, scale_x, scale_y, rotation)
