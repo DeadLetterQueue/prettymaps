@@ -129,8 +129,7 @@ def get_coast(
         bbox = (west, south, east, north)
         # Load the polygons for the coastline from a file
         geometries = read_file(file_location, bbox=bbox)
-        perimeter = 
-        get_boundary(
+        perimeter = get_boundary(
             point, radius, geometries.crs, circle=circle, dilate=dilate
         )
 
