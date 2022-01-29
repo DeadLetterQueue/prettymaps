@@ -301,6 +301,10 @@ def plot(
             )
         else:
             # Draw shape normally
+            path_effects = None
+            if 'path_effects' in kwargs:
+                path_effects = kwargs['path_effects']
+
             plot_shapes(shapes, ax, vsketch=vsketch, path_effects=path_effects, **kwargs)
 
     if ((isinstance(osm_credit, dict)) or (osm_credit is True)) and (vsketch is None):
