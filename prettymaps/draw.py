@@ -304,8 +304,8 @@ def plot(
             path_effects = None
             if 'path_effects' in kwargs:
                 path_effects = kwargs['path_effects']
-
-            plot_shapes(shapes, ax, path_effects, vsketch=vsketch, **kwargs)
+            print(path_effects)
+            plot_shapes(shapes, ax, None, vsketch=vsketch, **kwargs)
 
     if ((isinstance(osm_credit, dict)) or (osm_credit is True)) and (vsketch is None):
         x, y = figsize
