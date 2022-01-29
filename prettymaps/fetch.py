@@ -242,7 +242,7 @@ def get_gpx(
     # Get points, lines, polys & multipolys
     points, lines, polys, multipolys = map(
         lambda t: [x for x in geometries if isinstance(x, t)],
-        [Point, LineString, Polygon, MultiPolygon]
+        [Point, LineString, Polygon, MultiPolygon,MultiString]
     )
     print('DF')
     for t in multipolys:
