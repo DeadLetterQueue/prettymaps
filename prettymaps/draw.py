@@ -281,7 +281,7 @@ def plot(
         x = []
         y = []
         for layer in layers:
-            for i in layer.exterior.coords:
+            for i in layers[layer].exterior.coords:
               x.append(i[0])
               y.append(i[1])
 
