@@ -34,7 +34,7 @@ from .fetch import get_perimeter, get_layer
 
 
 # Plot a single shape
-def plot_shape(shape, ax, vsketch=None, path_effects=None, **kwargs):
+def plot_shape(shape, ax, path_effects, vsketch=None, **kwargs):
     """
     Plot shapely object
     """
@@ -68,7 +68,7 @@ def plot_shape(shape, ax, vsketch=None, path_effects=None, **kwargs):
 
 
 # Plot a collection of shapes
-def plot_shapes(shapes, ax, vsketch=None, palette=None, path_effects=None, **kwargs):
+def plot_shapes(shapes, ax, path_effects, vsketch=None, palette=None, **kwargs):
     """
     Plot collection of shapely objects (optionally, use a color palette)
     """
@@ -77,9 +77,9 @@ def plot_shapes(shapes, ax, vsketch=None, palette=None, path_effects=None, **kwa
 
     for shape in shapes:
         if palette is None:
-            plot_shape(shape, ax, vsketch=vsketch, path_effects=path_effects, **kwargs)
+            plot_shape(shape, ax, path_effects, vsketch=vsketch, **kwargs)
         else:
-            plot_shape(shape, ax, vsketch=vsketch, fc=choice(palette), path_effects=path_effects, **kwargs)
+            plot_shape(shape, ax, path_effects, vsketch=vsketch, fc=choice(palette), **kwargs)
 
 
 # Parse query (by coordinates, OSMId or name)
@@ -305,7 +305,7 @@ def plot(
             if 'path_effects' in kwargs:
                 path_effects = kwargs['path_effects']
 
-            plot_shapes(shapes, ax, vsketch=vsketch, path_effects=path_effects, **kwargs)
+            plot_shapes(shapes, ax, path_effects, vsketch=vsketch, **kwargs)
 
     if ((isinstance(osm_credit, dict)) or (osm_credit is True)) and (vsketch is None):
         x, y = figsize
