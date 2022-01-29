@@ -542,6 +542,8 @@ def get_layer(layer: String, **kwargs) -> Union[Polygon, MultiPolygon]:
     elif 'tags' in kwargs and 'gpx_file' in kwargs["tags"]:
         gdf = get_gpx(**kwargs)
         return gdf
+    elif layer == "heatmap":
+        return None
     # Fetch geometries
     else:
         return get_geometries(**kwargs)
