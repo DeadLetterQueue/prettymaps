@@ -22,6 +22,7 @@ from tokenize import Number, String
 from typing import Optional, Union, Tuple
 from xmlrpc.client import Boolean
 
+import os
 import osmnx as ox
 from osmnx import utils_geo
 from osmnx._errors import EmptyOverpassResponse
