@@ -202,6 +202,14 @@ def get_gpx(
         gpx = conv.fit_to_gpx(f_in=tags['gpx_file'], f_out=tags['gpx_file'] + '.gpx')
         f_out=tags['gpx_file'] = tags['gpx_file'] + '.gpx'
 
+    if tags['gpx_file'].endswith('.fit.gz'):
+        from fit2gpx import Converter
+        conv = Converter()          # create standard converter object
+        #a_file = gzip.open(tags['gpx_file'], "rb")
+        #contents = a_file.read()
+        gpx = conv.fit_to_gpx(f_in=tags['gpx_file'], f_out=tags['gpx_file'] + '.gpx')
+        f_out=tags['gpx_file'] = tags['gpx_file'] + '.gpx'
+        
     # Boundary defined by polygon (perimeter)
     if perimeter is not None:
         geometries = gpd.read_file(tags['gpx_file'], layer='tracks')
