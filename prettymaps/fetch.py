@@ -205,14 +205,14 @@ def get_gpx(
         with open(gpx_file_out, 'rb') as f_in:
             with gzip.open(gpx_file_in, 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
-                tags['gpx_file'] = gpx_file_out
+                gpx_file_in = gpx_file_out
         
     if gpx_file_in.endswith('.fit'):
         gpx_file_out = gpx_file_in[:len(gpx_file_in) - 4] + '.gpx'
         from fit2gpx import Converter
         conv = Converter()
         gpx = conv.fit_to_gpx(f_in=gpx_file_in, f_out=gpx_file_out)
-        f_out=tags['gpx_file'] = gpx_file_out
+        gpx_file_in = gpx_file_out
         
     # Boundary defined by polygon (perimeter)
     if perimeter is not None:
