@@ -196,6 +196,11 @@ def get_gpx(
     Returns:
         [type]: [description]
     """
+    if tags['gpx_file'].endswith('.fit'):
+        from fit2gpx import Converter
+        conv = Converter()          # create standard converter object
+        gpx = conv.fit_to_gpx(f_in=tags['gpx_file'], f_out=tags['gpx_file'] + '.gpx')
+        f_out=tags['gpx_file'] = tags['gpx_file'] + '.gpx'
 
     # Boundary defined by polygon (perimeter)
     if perimeter is not None:
