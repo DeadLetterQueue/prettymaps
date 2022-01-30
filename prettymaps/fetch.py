@@ -216,8 +216,9 @@ def get_gpx(
         
     if gpx_file_in.endswith('.tcx'):
         gpx_file_out = gpx_file_in[:len(gpx_file_in) - 4] + '.gpx'
+        gpx_file_out_dir = gpx_file_out if os.path.isdir(gpx_file_out) else os.path.dirname(gpx_file_out)
         from tcx2gpx import TCX2GPX
-        gps_object = tcx2gpx.TCX2GPX(tcx_path=gpx_file_in)
+        gps_object = tcx2gpx.TCX2GPX(tcx_path=gpx_file_in,outdir=gpx_file_out_dir)
         gps_object.convert()
         gpx_file_in = gpx_file_out
         
