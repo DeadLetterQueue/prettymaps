@@ -196,33 +196,28 @@ def get_gpx(
     Returns:
         [type]: [description]
     """
-    if tags['gpx_file'].endswith('.gz'):
+    gpx_file_in = tags['gpx_file']
+    gpx_file_out = gpx_file_in 
+    if gpx_file_in.endswith('.gz'):
+        gpx_file_out = gpx_file_in[:size - 3]
         import gzip
-        with gzip.open(tags['gpx_file'], 'rb') as f:
+        with gzip.open(gpx_file_in, 'rb') as f:
             file_content = f.read()
-            f = open(tags['gpx_file'][:size - 3], "a")
+            f = open(gpx_file_out, "a")
             f.write(file_content)
             f.close()
-            tags['gpx_file'] = tags['gpx_file'][:size - 3]
-                
-    if tags['gpx_file'].endswith('.fit'):
+            tags['gpx_file'] = gpx_file_out
+        
+    if gpx_file_in.endswith('.fit'):
+        gpx_file_out = gpx_file_in[:size - 4] + '.gpx'
         from fit2gpx import Converter
-        conv = Converter()          # create standard converter object
-        gpx = conv.fit_to_gpx(f_in=tags['gpx_file'], f_out=tags['gpx_file'] + '.gpx')
-        f_out=tags['gpx_file'] = tags['gpx_file'] + '.gpx'
-
-
-                
-        from fit2gpx import Converter
-        conv = Converter()          # create standard converter object
-        #a_file = gzip.open(tags['gpx_file'], "rb")
-        #contents = a_file.read()
-        gpx = conv.fit_to_gpx(f_in=tags['gpx_file'], f_out=tags['gpx_file'] + '.gpx')
-        f_out=tags['gpx_file'] = tags['gpx_file'] + '.gpx'
+        conv = Converter()
+        gpx = conv.fit_to_gpx(f_in=gpx_file_in, f_out=gpx_file_out)
+        f_out=tags['gpx_file'] = gpx_file_out
         
     # Boundary defined by polygon (perimeter)
     if perimeter is not None:
-        geometries = gpd.read_file(tags['gpx_file'], layer='tracks')
+        geometries = gpd.read_file(gpx_file_in, layer='tracks')
         geometries.set_crs(crs="EPSG:4326")
         print('Y')
         print(geometries)
