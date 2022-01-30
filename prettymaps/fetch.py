@@ -203,7 +203,7 @@ def get_gpx(
         import gzip
         with gzip.open(gpx_file_in, 'rb') as f:
             file_content = f.read()
-            f = open(gpx_file_out, "a")
+            f = open(gpx_file_out, "wb")
             f.write(str(file_content))
             f.close()
             tags['gpx_file'] = gpx_file_out
