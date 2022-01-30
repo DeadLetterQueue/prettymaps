@@ -202,8 +202,8 @@ def get_gpx(
         gpx_file_out = gpx_file_in[:len(gpx_file_in) - 3]
         import gzip
         import shutil
-        with open(gpx_file_out, 'rb') as f_in:
-            with gzip.open(gpx_file_in, 'wb') as f_out:
+        with open(gpx_file_in, 'rb') as f_in:
+            with gzip.open(gpx_file_out, 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
                 gpx_file_in = gpx_file_out
         
