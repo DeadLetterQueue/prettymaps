@@ -198,12 +198,12 @@ def get_gpx(
     """
     if tags['gpx_file'].endswith('.gz'):
         import gzip
-            with gzip.open(tags['gpx_file'], 'rb') as f:
-                file_content = f.read()
-                f = open(tags['gpx_file'][:size - 3], "a")
-                f.write(file_content)
-                f.close()
-                tags['gpx_file'] = tags['gpx_file'][:size - 3]
+        with gzip.open(tags['gpx_file'], 'rb') as f:
+            file_content = f.read()
+            f = open(tags['gpx_file'][:size - 3], "a")
+            f.write(file_content)
+            f.close()
+            tags['gpx_file'] = tags['gpx_file'][:size - 3]
                 
     if tags['gpx_file'].endswith('.fit'):
         from fit2gpx import Converter
