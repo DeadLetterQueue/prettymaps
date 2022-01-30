@@ -229,8 +229,8 @@ def get_gpx(
             print(t)
     # Boundary defined by circle with radius 'radius' around point
     elif (point is not None) and (radius is not None):
-        geometries = gpd.read_file(tags['gpx_file'], layer='tracks')
-        print('E '+tags['gpx_file'] )
+        geometries = gpd.read_file(gpx_file_in, layer='tracks')
+        print('E '+gpx_file_in )
         print(geometries)
         perimeter = get_boundary(
             point, radius, geometries.crs, circle=circle, dilate=dilate
