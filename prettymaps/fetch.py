@@ -197,112 +197,70 @@ def get_gpx(
     Returns:
         [type]: [description]
     """
-    gpx_file_in = tags['gpx_file']
-    gpx_file_out = gpx_file_in
-    if gpx_file_in.endswith('.gz'):
-        gpx_file_out = gpx_file_in[:len(gpx_file_in) - 3]
-        import gzip
-        import shutil
-        with open(gpx_file_in, 'rb') as f_in:
-            with gzip.open(gpx_file_out, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
-                gpx_file_in = gpx_file_out
-        
-    if gpx_file_in.endswith('.fit'):
-        gpx_file_out = gpx_file_in[:len(gpx_file_in) - 4] + '.gpx'
-        from fit2gpx import Converter
-        conv = Converter()
-        gpx = conv.fit_to_gpx(f_in=gpx_file_in, f_out=gpx_file_out)
-        gpx_file_in = gpx_file_out
-        
-    if gpx_file_in.endswith('.tcx'):
-        gpx_file_out = gpx_file_in[:len(gpx_file_in) - 4] + '.gpx'
-        gpx_file_out_dir = gpx_file_out if os.path.isdir(gpx_file_out) else os.path.dirname(gpx_file_out)
-        from tcx2gpx import TCX2GPX
-        gps_object = tcx2gpx.TCX2GPX(tcx_path=gpx_file_in,outdir=gpx_file_out_dir)
-        gps_object.convert()
-        gpx_file_in = gpx_file_out
-        
-    # Boundary defined by polygon (perimeter)
-    if perimeter is not None:
-        geometries = gpd.read_file(gpx_file_in, layer='tracks')
-        geometries.set_crs(crs="EPSG:4326")
-        print('Y')
-        print(geometries)
-        for t in geometries:
-            print(t)
-        perimeter = unary_union(ox.project_gdf(perimeter).geometry)
-        print('X')
-        print(perimeter)
-        for t in perimeter:
-            print(t)
-    # Boundary defined by circle with radius 'radius' around point
-    elif (point is not None) and (radius is not None):
-        geometries = gpd.read_file(gpx_file_in, layer='tracks')
-        print('E '+gpx_file_in )
-        print(geometries)
-        perimeter = get_boundary(
-            point, radius, geometries.crs, circle=circle, dilate=dilate
+    files = glob.glob(tags['gpx_file'])
+    for file in files:
+        gpx_file_in = file
+        gpx_file_out = gpx_file_in
+        if gpx_file_in.endswith('.gz'):
+            gpx_file_out = gpx_file_in[:len(gpx_file_in) - 3]
+            import gzip
+            import shutil
+            with open(gpx_file_in, 'rb') as f_in:
+                with gzip.open(gpx_file_out, 'wb') as f_out:
+                    shutil.copyfileobj(f_in, f_out)
+                    gpx_file_in = gpx_file_out
+
+        if gpx_file_in.endswith('.fit'):
+            gpx_file_out = gpx_file_in[:len(gpx_file_in) - 4] + '.gpx'
+            from fit2gpx import Converter
+            conv = Converter()
+            gpx = conv.fit_to_gpx(f_in=gpx_file_in, f_out=gpx_file_out)
+            gpx_file_in = gpx_file_out
+
+        if gpx_file_in.endswith('.tcx'):
+            gpx_file_out = gpx_file_in[:len(gpx_file_in) - 4] + '.gpx'
+            gpx_file_out_dir = gpx_file_out if os.path.isdir(gpx_file_out) else os.path.dirname(gpx_file_out)
+            from tcx2gpx import TCX2GPX
+            gps_object = tcx2gpx.TCX2GPX(tcx_path=gpx_file_in,outdir=gpx_file_out_dir)
+            gps_object.convert()
+            gpx_file_in = gpx_file_out
+
+        # Boundary defined by polygon (perimeter)
+        if perimeter is not None:
+            geometries = gpd.read_file(gpx_file_in, layer='tracks')
+            geometries.set_crs(crs="EPSG:4326")
+            perimeter = unary_union(ox.project_gdf(perimeter).geometry)
+        # Boundary defined by circle with radius 'radius' around point
+        elif (point is not None) and (radius is not None):
+            geometries = gpd.read_file(gpx_file_in, layer='tracks')
+            perimeter = get_boundary(
+                point, radius, geometries.crs, circle=circle, dilate=dilate
+            )
+        # Project GDF
+        if len(geometries) > 0:
+            geometries = ox.project_gdf(geometries)
+
+        # Intersect with perimeter
+        geometries = geometries.intersection(perimeter)
+
+        # Get points, lines, polys & multipolys
+        points, lines, polys, multipolys, multilinestring = map(
+            lambda t: [x for x in geometries if isinstance(x, t)],
+            [Point, LineString, Polygon, MultiPolygon,MultiLineString]
         )
-        print('Q')
-        print(perimeter)
+        for t in multilinestring:
+            for line in t:
+                lines.append(line)
 
-    # Project GDF
-    if len(geometries) > 0:
-        print('D')
-        print(geometries)
-        geometries = ox.project_gdf(geometries)
-        print('K')
-        print(geometries)
-        for t in geometries:
-            print(t)
-
-    print('WW')
-    # Intersect with perimeter
-    geometries = geometries.intersection(perimeter)
-    print(geometries)
-    for t in geometries:
-        print('EE')
-        print(t)
-            
-    # Get points, lines, polys & multipolys
-    points, lines, polys, multipolys, multilinestring = map(
-        lambda t: [x for x in geometries if isinstance(x, t)],
-        [Point, LineString, Polygon, MultiPolygon,MultiLineString]
-    )
-    print('DF')
-    for t in multipolys:
-            print(t)
-    print('DF2')
-    for t in points:
-            print(t)
-    print('DF3')
-    for t in lines:
-            print(t)     
-    print('DF4')
-    for t in polys:
-            print(t)
-    print('DF4')
-    for t in multilinestring:
-        for line in t:
-            print(line)
-            lines.append(line)
-            
-    # Convert points, lines & polygons into multipolygons
-    points = [x.buffer(point_size) for x in points]
-    lines = [x.buffer(line_width) for x in lines]
-    # Concatenate multipolys
-    multipolys = reduce(lambda x,y: x+y, [list(x) for x in multipolys]) if len(multipolys) > 0 else []
-    print('DeF')
-    for t in multipolys:
-            print(t)
-    # Group everything
-    geometries = MultiPolygon(points + lines + polys + multipolys)
-    print('DeddF')
-    for t in geometries:
-            print(t)
-    # Compute union if specified
-    if union: geometries = unary_union(geometries);
+        # Convert points, lines & polygons into multipolygons
+        points = [x.buffer(point_size) for x in points]
+        lines = [x.buffer(line_width) for x in lines]
+        # Concatenate multipolys
+        multipolys = reduce(lambda x,y: x+y, [list(x) for x in multipolys]) if len(multipolys) > 0 else []
+        # Group everything
+        geometries = MultiPolygon(points + lines + polys + multipolys)
+        # Compute union if specified
+        if union: geometries = unary_union(geometries);
 
     return geometries
 
