@@ -236,8 +236,6 @@ def plot(
                 if query_mode == "polygon"
                 else get_perimeter(query, by_osmid=query_mode == "osmid", buffer_dist=buffer_dist)
             }
-        print('R')
-        print(base_kwargs)
         # Fetch layers
         layers = {
             layer: get_layer(
@@ -245,8 +243,6 @@ def plot(
             )
             for layer, kwargs in layers.items()
         }
-        print('A')
-        print(layers)
         
             
         # Apply transformation to layers (translate & scale)
