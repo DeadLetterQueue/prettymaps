@@ -186,6 +186,20 @@ def get_gpx(
     limit = tags['limit'] if 'limit' in tags else -1
     file_count = 0
     files = glob.glob(tags['gpx_file'])
+    
+    # Boundary defined by polygon (perimeter)
+    if perimeter is not None:
+        geometries = ox.geometries_from_polygon(
+            unary_union(perimeter.to_crs(3174).buffer(buffer+perimeter_tolerance).to_crs(4326).geometry)
+            if buffer >0 or perimeter_tolerance > 0
+            else unary_union(perimeter.geometry),
+            tags={tags: True} if type(tags) == str else tags,
+        )
+        perimeter = unary_union(ox.project_gdf(perimeter).geometry)
+    # Boundary defined by circle with radius 'radius' around point
+    elif (point is not None) and (radius is not None):
+        perimeter = get_boundary(point, radius, "EPSG:4326", circle=circle, dilate=dilate)
+            
     for file in files:
         if limit != -1 and file_count >= limit:
             break
@@ -218,15 +232,6 @@ def get_gpx(
             
         gpx_geometries = gpd.read_file(gpx_file_in, layer='tracks')
         gpx_geometries.set_crs(crs="EPSG:4326")
-        
-        # Boundary defined by polygon (perimeter)
-        if perimeter is not None:
-            perimeter = unary_union(ox.project_gdf(perimeter).geometry)
-        # Boundary defined by circle with radius 'radius' around point
-        elif (point is not None) and (radius is not None):
-            perimeter = get_boundary(
-                point, radius, "EPSG:4326", circle=circle, dilate=dilate
-            )
 
         # Project GDF
         if len(gpx_geometries) > 0:
