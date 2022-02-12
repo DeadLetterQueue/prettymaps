@@ -182,8 +182,14 @@ def get_gpx(
     Returns:
         [type]: [description]
     """
+    geometries = []
+    limit = tags['limit'] if 'limit' in tags else -1
+    file_count = 0
     files = glob.glob(tags['gpx_file'])
     for file in files:
+        if limit != -1 and file_count >= limit:
+            break
+        file_count = file_count + 1
         gpx_file_in = file
         gpx_file_out = gpx_file_in
         if gpx_file_in.endswith('.gz'):
@@ -210,8 +216,8 @@ def get_gpx(
             gps_object.convert()
             gpx_file_in = gpx_file_out
             
-        geometries = gpd.read_file(gpx_file_in, layer='tracks')
-        geometries.set_crs(crs="EPSG:4326")
+        gpx_geometries = gpd.read_file(gpx_file_in, layer='tracks')
+        gpx_geometries.set_crs(crs="EPSG:4326")
         
         # Boundary defined by polygon (perimeter)
         if perimeter is not None:
@@ -223,34 +229,35 @@ def get_gpx(
             )
 
         # Project GDF
-        if len(geometries) > 0:
-            geometries = ox.project_gdf(geometries)
+        if len(gpx_geometries) > 0:
+            gpx_geometries = ox.project_gdf(gpx_geometries)
 
         # Intersect with perimeter
-        geometries = geometries.intersection(perimeter)
+        gpx_geometries = gpx_geometries.intersection(perimeter)
+        geometries.extend(gpx_geometries)
 
-        # Get points, lines, polys & multipolys
-        points, lines, polys, multipolys, multilinestring = map(
-            lambda t: [x for x in geometries if isinstance(x, t)],
-            [Point, LineString, Polygon, MultiPolygon,MultiLineString]
-        )
-        
-        for t in multilinestring:
-            for line in t:
-                lines.append(line)
+    # Get points, lines, polys & multipolys
+    points, lines, polys, multipolys, multilinestring = map(
+        lambda t: [x for x in geometries if isinstance(x, t)],
+        [Point, LineString, Polygon, MultiPolygon,MultiLineString]
+    )
 
-        # Convert points, lines & polygons into multipolygons
-        points = [x.buffer(point_size) for x in points]
-        lines = [x.buffer(line_width) for x in lines]
-        
-        # Concatenate multipolys
-        multipolys = reduce(lambda x,y: x+y, [list(x) for x in multipolys]) if len(multipolys) > 0 else []
-        
-        # Group everything
-        geometries = MultiPolygon(points + lines + polys + multipolys)
-        
-        # Compute union if specified
-        if union: geometries = unary_union(geometries);
+    for t in multilinestring:
+        for line in t:
+            lines.append(line)
+
+    # Convert points, lines & polygons into multipolygons
+    points = [x.buffer(point_size) for x in points]
+    lines = [x.buffer(line_width) for x in lines]
+
+    # Concatenate multipolys
+    multipolys = reduce(lambda x,y: x+y, [list(x) for x in multipolys]) if len(multipolys) > 0 else []
+
+    # Group everything
+    geometries = MultiPolygon(points + lines + polys + multipolys)
+
+    # Compute union if specified
+    if union: geometries = unary_union(geometries);
 
     return geometries
 
