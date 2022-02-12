@@ -51,16 +51,6 @@ def get_boundary(
     """
 
     if circle:
-        print('crs2')
-        print(ox.project_gdf(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs)))
-        print('crs3')
-        print(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs))
-        print('crs26')
-        print(crs)
-        print('crs4')
-        print(ox.project_gdf(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs)).crs)
-        print('crs5')
-        
         return (
             ox.project_gdf(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs))
             .geometry[0]
@@ -72,10 +62,6 @@ def get_boundary(
             .geometry[0]
             .xy
         )
-        print('crs')
-        print(ox.project_gdf(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs)).crs)
-        print(GeoDataFrame(geometry=[Point(point[::-1])]))
-        print(ox.project_gdf(GeoDataFrame(geometry=[Point(point[::-1])], crs=crs)))
         r = radius
         return Polygon(
             [(x - r, y - r), (x + r, y - r), (x + r, y + r), (x - r, y + r)]
@@ -166,8 +152,6 @@ def get_coast(
                 [],
             )
         )
-    print('S')
-    print(geometries)
     return geometries
 
 def get_gpx(
@@ -302,15 +286,7 @@ def get_geometries(
             else unary_union(perimeter.geometry),
             tags={tags: True} if type(tags) == str else tags,
         )
-        print('Y')
-        print(geometries)
-        for t in geometries:
-            print(t)
         perimeter = unary_union(ox.project_gdf(perimeter).geometry)
-        print('X')
-        print(perimeter)
-        for t in perimeter:
-            print(t)
     # Boundary defined by circle with radius 'radius' around point
     elif (point is not None) and (radius is not None):
         geometries = ox.geometries_from_point(
@@ -318,52 +294,30 @@ def get_geometries(
             dist=radius + dilate + buffer,
             tags={tags: True} if type(tags) == str else tags,
         )
-        print('E')
-        print(geometries)
         perimeter = get_boundary(
             point, radius, geometries.crs, circle=circle, dilate=dilate
         )
-        print('Q')
-        print(perimeter)
 
     # Project GDF
     if len(geometries) > 0:
-        print('D')
-        print(geometries)
         geometries = ox.project_gdf(geometries)
-        print('K')
-        print(geometries)
-        for t in geometries:
-            print(t)
 
     # Intersect with perimeter
     geometries = geometries.intersection(perimeter)
-
-    for t in geometries:
-            print(t)
             
     # Get points, lines, polys & multipolys
     points, lines, polys, multipolys = map(
         lambda t: [x for x in geometries if isinstance(x, t)],
         [Point, LineString, Polygon, MultiPolygon]
     )
-    print('DF')
-    for t in multipolys:
-            print(t)
             
     # Convert points, lines & polygons into multipolygons
     points = [x.buffer(point_size) for x in points]
     lines = [x.buffer(line_width) for x in lines]
     # Concatenate multipolys
     multipolys = reduce(lambda x,y: x+y, [list(x) for x in multipolys]) if len(multipolys) > 0 else []
-    print('DeF')
-    for t in multipolys:
-            print(t)
     # Group everything
     geometries = MultiPolygon(points + lines + polys + multipolys)
-    print('DeddF')
-    for t in geometries:
-            print(t)
     # Compute union if specified
     if union: geometries = unary_union(geometries);
 
