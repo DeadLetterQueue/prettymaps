@@ -209,18 +209,19 @@ def get_gpx(
             gps_object = tcx2gpx.TCX2GPX(tcx_path=gpx_file_in,outdir=gpx_file_out_dir)
             gps_object.convert()
             gpx_file_in = gpx_file_out
-
+            
+        geometries = gpd.read_file(gpx_file_in, layer='tracks')
+        geometries.set_crs(crs="EPSG:4326")
+        
         # Boundary defined by polygon (perimeter)
         if perimeter is not None:
-            geometries = gpd.read_file(gpx_file_in, layer='tracks')
-            geometries.set_crs(crs="EPSG:4326")
             perimeter = unary_union(ox.project_gdf(perimeter).geometry)
         # Boundary defined by circle with radius 'radius' around point
         elif (point is not None) and (radius is not None):
-            geometries = gpd.read_file(gpx_file_in, layer='tracks')
             perimeter = get_boundary(
-                point, radius, geometries.crs, circle=circle, dilate=dilate
+                point, radius, "EPSG:4326", circle=circle, dilate=dilate
             )
+
         # Project GDF
         if len(geometries) > 0:
             geometries = ox.project_gdf(geometries)
@@ -233,6 +234,7 @@ def get_gpx(
             lambda t: [x for x in geometries if isinstance(x, t)],
             [Point, LineString, Polygon, MultiPolygon,MultiLineString]
         )
+        
         for t in multilinestring:
             for line in t:
                 lines.append(line)
@@ -240,10 +242,13 @@ def get_gpx(
         # Convert points, lines & polygons into multipolygons
         points = [x.buffer(point_size) for x in points]
         lines = [x.buffer(line_width) for x in lines]
+        
         # Concatenate multipolys
         multipolys = reduce(lambda x,y: x+y, [list(x) for x in multipolys]) if len(multipolys) > 0 else []
+        
         # Group everything
         geometries = MultiPolygon(points + lines + polys + multipolys)
+        
         # Compute union if specified
         if union: geometries = unary_union(geometries);
 
@@ -314,10 +319,13 @@ def get_geometries(
     # Convert points, lines & polygons into multipolygons
     points = [x.buffer(point_size) for x in points]
     lines = [x.buffer(line_width) for x in lines]
+    
     # Concatenate multipolys
     multipolys = reduce(lambda x,y: x+y, [list(x) for x in multipolys]) if len(multipolys) > 0 else []
+    
     # Group everything
     geometries = MultiPolygon(points + lines + polys + multipolys)
+    
     # Compute union if specified
     if union: geometries = unary_union(geometries);
 
