@@ -235,16 +235,10 @@ def get_gpx(
         gpx_geometries.set_crs(crs="EPSG:4326")
 
         # Project GDF
-        print(gpx_file_in)
-        print(len(gpx_geometries))
-        if len(gpx_geometries) > 0:
-            print(gpx_geometries['geometry'])
-            print(gpx_geometries['geometry'].geom_type)
-            print(gpx_geometries['geometry'].length)
-            if gpx_geometries['geometry'].length > 0:
-                gpx_geometries = ox.project_gdf(gpx_geometries)
-            else:
-                continue
+        try:
+            gpx_geometries = ox.project_gdf(gpx_geometries)
+        except:
+            continue
 
         # Intersect with perimeter
         gpx_geometries = gpx_geometries.intersection(perimeter)
