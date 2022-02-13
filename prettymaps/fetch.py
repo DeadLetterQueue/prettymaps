@@ -234,7 +234,11 @@ def get_gpx(
         gpx_geometries.set_crs(crs="EPSG:4326")
 
         # Project GDF
+        print(gpx_file_in)
+        print(len(gpx_geometries))
         if len(gpx_geometries) > 0:
+            print(gpx_geometries['geometry'])
+            print(gpx_geometries['geometry'].geom_type)
             if gpx_geometries['geometry'].geom_type != 'GeometryCollection':
                 gpx_geometries = ox.project_gdf(gpx_geometries)
             else:
