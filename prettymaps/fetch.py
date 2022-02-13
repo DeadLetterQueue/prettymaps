@@ -230,19 +230,20 @@ def get_gpx(
             gps_object = tcx2gpx.TCX2GPX(tcx_path=gpx_file_in,outdir=gpx_file_out_dir)
             gps_object.convert()
             gpx_file_in = gpx_file_out
-            
-        gpx_geometries = gpd.read_file(gpx_file_in, layer='tracks')
-        gpx_geometries.set_crs(crs="EPSG:4326")
+        try:    
+            gpx_geometries = gpd.read_file(gpx_file_in, layer='tracks')
+            gpx_geometries.set_crs(crs="EPSG:4326")
 
-        # Project GDF
-        try:
+            # Project GDF
+        
             gpx_geometries = ox.project_gdf(gpx_geometries)
+            
+            gpx_geometries = gpx_geometries.intersection(perimeter)
+            geometries.extend(gpx_geometries)
         except:
             continue
-
-        # Intersect with perimeter
-        gpx_geometries = gpx_geometries.intersection(perimeter)
-        geometries.extend(gpx_geometries)
+        #ddd
+        
 
     # Get points, lines, polys & multipolys
     points, lines, polys, multipolys, multilinestring = map(
