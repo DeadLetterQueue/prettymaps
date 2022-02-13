@@ -235,6 +235,7 @@ def get_gpx(
 
         # Project GDF
         if len(gpx_geometries) > 0:
+            print(file)
             gpx_geometries = ox.project_gdf(gpx_geometries)
 
         # Intersect with perimeter
