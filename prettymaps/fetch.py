@@ -235,7 +235,7 @@ def get_gpx(
 
         # Project GDF
         if len(gpx_geometries) > 0:
-            if gpx_geometries['']['geometry'].geom_type != 'GeometryCollection':
+            if gpx_geometries['geometry'].geom_type != 'GeometryCollection':
                 gpx_geometries = ox.project_gdf(gpx_geometries)
             else:
                 continue
