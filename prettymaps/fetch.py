@@ -235,8 +235,8 @@ def get_gpx(
 
         # Project GDF
         if len(gpx_geometries) > 0:
-            print(file)
-            gpx_geometries = ox.project_gdf(gpx_geometries)
+            if gpx_geometries['']['geometry'].geom_type != 'GeometryCollection':
+                gpx_geometries = ox.project_gdf(gpx_geometries)
 
         # Intersect with perimeter
         gpx_geometries = gpx_geometries.intersection(perimeter)
