@@ -265,7 +265,7 @@ def plot(
 
     # Plot background
     if "background" in drawing_kwargs:
-        geom = scale(box(*layers["perimeter"].bounds), 1.2, 1.2)
+        geom = scale(box(*layers["perimeter"].bounds), 1.2, 1.2).symmetric_difference(layers["perimeter"])
 
         if vsketch is None:
             ax.add_patch(PolygonPatch(geom, **drawing_kwargs["background"]))
