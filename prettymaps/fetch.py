@@ -32,6 +32,7 @@ from shapely.geometry import Point, Polygon, MultiPolygon, LineString, MultiLine
 from shapely.ops import unary_union
 from geopandas import GeoDataFrame, read_file
 import geopandas as gpd
+from shapely.geometry.collection import GeometryCollection 
 
 def get_boundary(
     point: Tuple, radius: float, crs: String, circle: Boolean = True, dilate: float = 0
