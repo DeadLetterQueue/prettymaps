@@ -204,33 +204,34 @@ def get_gpx(
     for file in files:
         if limit != -1 and file_count >= limit:
             break
-        file_count = file_count + 1
-        gpx_file_in = file
-        gpx_file_out = gpx_file_in
-        if gpx_file_in.endswith('.gz'):
-            gpx_file_out = gpx_file_in[:len(gpx_file_in) - 3]
-            import gzip
-            import shutil
-            with open(gpx_file_in, 'rb') as f_in:
-                with gzip.open(gpx_file_out, 'wb') as f_out:
-                    shutil.copyfileobj(f_in, f_out)
-                    gpx_file_in = gpx_file_out
+        try: 
+            file_count = file_count + 1
+            gpx_file_in = file
+            gpx_file_out = gpx_file_in
+            if gpx_file_in.endswith('.gz'):
+                gpx_file_out = gpx_file_in[:len(gpx_file_in) - 3]
+                import gzip
+                import shutil
+                with open(gpx_file_in, 'rb') as f_in:
+                    with gzip.open(gpx_file_out, 'wb') as f_out:
+                        shutil.copyfileobj(f_in, f_out)
+                        gpx_file_in = gpx_file_out
 
-        if gpx_file_in.endswith('.fit'):
-            gpx_file_out = gpx_file_in[:len(gpx_file_in) - 4] + '.gpx'
-            from fit2gpx import Converter
-            conv = Converter()
-            gpx = conv.fit_to_gpx(f_in=gpx_file_in, f_out=gpx_file_out)
-            gpx_file_in = gpx_file_out
+            if gpx_file_in.endswith('.fit'):
+                gpx_file_out = gpx_file_in[:len(gpx_file_in) - 4] + '.gpx'
+                from fit2gpx import Converter
+                conv = Converter()
+                gpx = conv.fit_to_gpx(f_in=gpx_file_in, f_out=gpx_file_out)
+                gpx_file_in = gpx_file_out
 
-        if gpx_file_in.endswith('.tcx'):
-            gpx_file_out = gpx_file_in[:len(gpx_file_in) - 4] + '.gpx'
-            gpx_file_out_dir = gpx_file_out if os.path.isdir(gpx_file_out) else os.path.dirname(gpx_file_out)
-            from tcx2gpx import TCX2GPX
-            gps_object = tcx2gpx.TCX2GPX(tcx_path=gpx_file_in,outdir=gpx_file_out_dir)
-            gps_object.convert()
-            gpx_file_in = gpx_file_out
-        try:    
+            if gpx_file_in.endswith('.tcx'):
+                gpx_file_out = gpx_file_in[:len(gpx_file_in) - 4] + '.gpx'
+                gpx_file_out_dir = gpx_file_out if os.path.isdir(gpx_file_out) else os.path.dirname(gpx_file_out)
+                from tcx2gpx import TCX2GPX
+                gps_object = tcx2gpx.TCX2GPX(tcx_path=gpx_file_in,outdir=gpx_file_out_dir)
+                gps_object.convert()
+                gpx_file_in = gpx_file_out
+
             gpx_geometries = gpd.read_file(gpx_file_in, layer='tracks')
             gpx_geometries.set_crs(crs="EPSG:4326")
 
